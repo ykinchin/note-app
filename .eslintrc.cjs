@@ -16,6 +16,7 @@ module.exports = {
     ],
     'no-console': 'warn',
     quotes: ['warn', 'single'],
+    'jsx-quotes': ['warn', 'prefer-single'],
     'prefer-const': 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
