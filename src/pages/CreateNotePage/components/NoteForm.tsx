@@ -1,7 +1,6 @@
 import { FC, FormEvent, useRef, useState } from 'react'
 import { Button, Col, Form, Row, Stack } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-import { OnChangeValue } from 'react-select'
 import CreatableReactSelect from 'react-select/creatable'
 
 import { v4 as uuidV4 } from 'uuid'
@@ -31,24 +30,6 @@ const NoteForm: FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }) => {
     navigate('..')
   }
 
-  const onTagChange = (tags: OnChangeValue<Tag[], boolean>) => {
-    setSelectedTags(
-      (tags as Tag[]).map((tag: Tag) => {
-        return { label: tag.label, id: tag.id }
-      }),
-    )
-  }
-
-  const getValue = () => {
-    if (selectedTags) {
-      selectedTags.map((tag: Tag) => {
-        return { label: tag.label, value: tag.id }
-      })
-    } else {
-      return selectedTags
-    }
-  }
-
   return (
     <Form onSubmit={handleSubmit}>
       <Stack gap={4}>
@@ -63,7 +44,9 @@ const NoteForm: FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }) => {
             <Form.Group controlId='tags'>
               <Form.Label>Tags</Form.Label>
               <CreatableReactSelect
-                value={getValue()}
+                value={selectedTags.map((tag) => {
+                  return { label: tag.label, value: tag.id }
+                })}
                 onCreateOption={(label) => {
                   const newTag = { id: uuidV4(), label }
                   onAddTag(newTag)
@@ -72,8 +55,14 @@ const NoteForm: FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }) => {
                 options={availableTags.map((tag) => {
                   return { label: tag.label, value: tag.id }
                 })}
-                onChange={onTagChange}
-                isMulti={true}
+                onChange={(tags) => {
+                  setSelectedTags(
+                    tags.map((tag) => {
+                      return { label: tag.label, id: tag.value }
+                    }),
+                  )
+                }}
+                isMulti
               />
             </Form.Group>
           </Col>

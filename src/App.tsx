@@ -7,6 +7,7 @@ import { v4 as uuidV4 } from 'uuid'
 
 import { useLocalStorage } from './hooks/useLocalStorage'
 import NewNote from './pages/CreateNotePage/NewNote'
+import NoteList from './pages/NoteListPage/NoteList'
 import { NoteData, Tag } from './types/noteTypes'
 
 type RawNote = {
@@ -22,6 +23,15 @@ export type RawNoteData = {
 function App() {
   const [notes, setNotes] = useLocalStorage<RawNote[]>('NOTES', [])
   const [tags, setTags] = useLocalStorage<Tag[]>('TAGS', [])
+
+  const notesWithTags = useMemo(() => {
+    return notes.map((note) => {
+      return {
+        ...note,
+        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
+      }
+    })
+  }, [notes, tags])
 
   function onCreateNote({ tags, ...data }: NoteData) {
     setNotes((prevNotes) => {
@@ -39,7 +49,10 @@ function App() {
   return (
     <Container className='my-4'>
       <Routes>
-        <Route path='/' element={<h1>Hi2</h1>}></Route>
+        <Route
+          path='/'
+          element={<NoteList notes={notesWithTags} availableTags={tags} />}
+        />
         <Route
           path='/new'
           element={
