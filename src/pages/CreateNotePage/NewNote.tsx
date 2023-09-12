@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
+import NoteForm from '../../components/NoteForm'
 import { NoteData, Tag } from '../../types/noteTypes'
-import NoteForm from './components/NoteForm'
 
 type NewNoteProps = {
   onSubmit: (data: NoteData) => void
