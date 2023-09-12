@@ -9,6 +9,7 @@ import Layout from './components/Layout'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import NewNote from './pages/CreateNotePage/NewNote'
 import NoteList from './pages/NoteListPage/NoteList'
+import NotePage from './pages/NotePage/NotePage'
 import { NoteData, Tag } from './types/noteTypes'
 
 type RawNote = {
@@ -43,6 +44,12 @@ function App() {
     })
   }
 
+  function onDeleteNote(id: string) {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id)
+    })
+  }
+
   function addTag(tag: Tag) {
     setTags((prev) => [...prev, tag])
   }
@@ -65,7 +72,7 @@ function App() {
           }
         ></Route>
         <Route path='/:id' element={<Layout notes={notesWithTags} />}>
-          <Route index element={<h1>Show</h1>} />
+          <Route index element={<NotePage onDelete={onDeleteNote} />} />
           <Route path='edit' element={<h1>Edit</h1>} />
         </Route>
         <Route path='*' element={<Navigate to='/' />}></Route>
