@@ -4,16 +4,25 @@ import { Link } from 'react-router-dom'
 import ReactSelect from 'react-select'
 
 import { Note, Tag } from '../../types/noteTypes'
+import EditTagsModal from './components/editTagsModal/EditTagsModal'
 import NoteCard from './components/noteCard/NoteCard'
 
 type NoteListProps = {
   availableTags: Tag[]
   notes: Note[]
+  onUpdateTag: (id: string, label: string) => void
+  onDeleteTag: (id: string) => void
 }
 
-const NoteList: FC<NoteListProps> = ({ availableTags, notes }) => {
+const NoteList: FC<NoteListProps> = ({
+  availableTags,
+  notes,
+  onUpdateTag,
+  onDeleteTag,
+}) => {
   const [title, setTitle] = useState('')
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [isModalOpened, setIsModalOpened] = useState(false)
 
   const filteredNotes = useMemo(() => {
     return notes.filter((note) => {
@@ -39,7 +48,12 @@ const NoteList: FC<NoteListProps> = ({ availableTags, notes }) => {
             <Link to='/new'>
               <Button variant='primaty'>Create</Button>
             </Link>
-            <Button variant='outline-secondary'>Edit tags</Button>
+            <Button
+              onClick={() => setIsModalOpened(true)}
+              variant='outline-secondary'
+            >
+              Edit tags
+            </Button>
           </Stack>
         </Col>
       </Row>
@@ -85,6 +99,13 @@ const NoteList: FC<NoteListProps> = ({ availableTags, notes }) => {
           </Col>
         ))}
       </Row>
+      <EditTagsModal
+        show={isModalOpened}
+        handleClose={() => setIsModalOpened(false)}
+        availableTags={availableTags}
+        onDeleteTag={onDeleteTag}
+        onUpdateTag={onUpdateTag}
+      />
     </>
   )
 }
