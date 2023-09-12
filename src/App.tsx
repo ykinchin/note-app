@@ -5,6 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidV4 } from 'uuid'
 
+import Layout from './components/Layout'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import NewNote from './pages/CreateNotePage/NewNote'
 import NoteList from './pages/NoteListPage/NoteList'
@@ -63,7 +64,7 @@ function App() {
             />
           }
         ></Route>
-        <Route path='/:id'>
+        <Route path='/:id' element={<Layout notes={notesWithTags} />}>
           <Route index element={<h1>Show</h1>} />
           <Route path='edit' element={<h1>Edit</h1>} />
         </Route>
